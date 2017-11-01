@@ -1,38 +1,40 @@
-import React, { Component } from "react";
-import "bootswatch/journal/bootstrap.css";
-// import "bootstrap/dist/css/bootstrap.css";
-import "./App.css";
+import React, {Component} from 'react';
+// import "bootswatch/journal/bootstrap.css";
+import 'bootstrap/dist/css/bootstrap.css';
+import './App.css';
 
-import { Navbar, NavItem, Nav, Grid, Row, Col } from "react-bootstrap";
+import {Navbar, NavItem, Nav, Grid, Row, Col} from 'react-bootstrap';
 
 const PLACES = [
-  { name: "Palo Alto", zip: "94303" },
-  { name: "San Jose", zip: "94088" },
-  { name: "Santa Cruz", zip: "95062" },
-  { name: "Honolulu", zip: "96803" }
+  {name: 'Palo Alto', zip: '94303'},
+  {name: 'San Jose', zip: '94088'},
+  {name: 'Santa Cruz', zip: '95062'},
+  {name: 'Honolulu', zip: '96803'},
+  {name: 'Ewa Beach', zip: '96706'},
 ];
 
 class WeatherDisplay extends Component {
   constructor() {
     super();
     this.state = {
-      weatherData: null
+      weatherData: null,
     };
   }
   componentDidMount() {
     const zip = this.props.zip;
-    const URL = "http://api.openweathermap.org/data/2.5/weather?q=" +
+    const URL =
+      'http://api.openweathermap.org/data/2.5/weather?q=' +
       zip +
-      "&appid=b1b35bba8b434a28a0be2a3e1071ae5b&units=imperial";
+      '&appid=a50c863a9328b69267ad0fed0863cb93&units=imperial';
     fetch(URL).then(res => res.json()).then(json => {
-      this.setState({ weatherData: json });
+      this.setState({weatherData: json});
     });
   }
   render() {
     const weatherData = this.state.weatherData;
     if (!weatherData) return <div>Loading</div>;
     const weather = weatherData.weather[0];
-    const iconUrl = "http://openweathermap.org/img/w/" + weather.icon + ".png";
+    const iconUrl = 'http://openweathermap.org/img/w/' + weather.icon + '.png';
     return (
       <div>
         <h1>
@@ -47,12 +49,11 @@ class WeatherDisplay extends Component {
     );
   }
 }
-
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      activePlace: 0
+      activePlace: 0,
     };
   }
   render() {
@@ -61,10 +62,10 @@ class App extends Component {
       <div>
         <Navbar>
           <Navbar.Header>
-            <Navbar.Brand>
-              React Simple Weather App
-            </Navbar.Brand>
-            <a href="https://github.com/ericvicenti/intro-to-react">Learn to build me</a>
+            <Navbar.Brand>React Simple Weather App</Navbar.Brand>
+            <a href="https://github.com/ericvicenti/intro-to-react">
+              Learn to build me
+            </a>
           </Navbar.Header>
         </Navbar>
         <Grid>
@@ -76,11 +77,14 @@ class App extends Component {
                 stacked
                 activeKey={activePlace}
                 onSelect={index => {
-                  this.setState({ activePlace: index });
-                }}
-              >
+                  this.setState({
+                    activePlace: index,
+                  });
+                }}>
                 {PLACES.map((place, index) => (
-                  <NavItem key={index} eventKey={index}>{place.name}</NavItem>
+                  <NavItem key={index} eventKey={index}>
+                    {place.name}
+                  </NavItem>
                 ))}
               </Nav>
             </Col>
@@ -93,5 +97,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;
