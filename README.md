@@ -82,7 +82,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <WeatherDisplay zip={"12345"} />
+        <WeatherDisplay latitude={"1.2948"} longitude= {"103.8565"} />
       </div>
     );
   }
@@ -95,7 +95,7 @@ As you can see, we are passing data into `WeatherDisplay`. This data is a prop, 
 class WeatherDisplay extends Component {
   render() {
     return (
-      <h1>Displaying weather for city {this.props.zip}</h1>
+      <h1>Displaying weather for city located at {this.props.latitude} x {this.props.longitude}</h1>
     );
   }
 }
@@ -105,11 +105,11 @@ Near the top of the file, lets add some different places that we might want to d
 
 ```js
 const PLACES = [
-  { name: "Palo Alto", zip: "94303" },
-  { name: "San Jose", zip: "94088" },
-  { name: "Santa Cruz", zip: "95062" },
-  { name: "Honolulu", zip: "96803" },
-  { name: "Ewa Beach", zip: "96706" }
+  { name: "Singapore", latitude: 1.2948, longitude: 103.8565 },
+  { name: "Seoul", latitude: 37.5665, longitude: 126.978 },
+  { name: "Honolulu", latitude: 21.3069, longitude: -157.8583 },
+  { name: "San Francisco", latitude: 37.7749, longitude: -122.4194 },
+  { name: "Menlo Park", latitude: 37.453, longitude: -122.1817 }
 ];
 ```
 
@@ -118,7 +118,7 @@ Now, upgrade the App's render function to iterate over each place, and render a 
 ```js
 return (
   <div className="App">
-    <WeatherDisplay zip={"12345"} />
+    <WeatherDisplay latitude={"1.2948"} longitude={"103.8565"} />
     {PLACES.map((place, index) => (
       <button
         key={index}
@@ -184,7 +184,8 @@ class App extends Component {
         ))}
         <WeatherDisplay
           key={activePlace}
-          zip={PLACES[activePlace].zip}
+          latitude={PLACES[activePlace].latitude}
+          longitude={PLACES[activePlace].longitude}
         />
       </div>
     );
@@ -213,8 +214,11 @@ class WeatherDisplay extends Component {
   }
   componentDidMount() {
     const zip = this.props.zip;
-    const URL = "http://api.openweathermap.org/data/2.5/weather?q=" +
-      zip +
+    const URL =
+      "http://api.openweathermap.org/data/2.5/weather?lat=" +
+      latitude +
+      "&lon=" +
+      longitude +
       "&appid=a50c863a9328b69267ad0fed0863cb93&units=imperial";
     fetch(URL).then(res => res.json()).then(json => {
       this.setState({ weatherData: json });
@@ -232,7 +236,7 @@ Let's improve our render method so we can display the data nicely once it is loa
 
 ```js
 const weather = weatherData.weather[0];
-const iconUrl = "http://openweathermap.org/img/w/" + weather.icon + ".png";
+const iconUrl = "https://openweathermap.org/img/w/" + weather.icon + ".png";
 return (
   <div>
     <h1>
@@ -258,7 +262,7 @@ Our app is still somewhat ugly. We can fix that by adding `className` props to o
 
 Or, we can install a library from `npm` that will help.
 
-[Bootstrap](http://getbootstrap.com/) is popular UI toolkit for HTML and CSS. Let's install it, alongside `react-bootstrap` which provides the React components for it:
+[Bootstrap](https://getbootstrap.com/) is popular UI toolkit for HTML and CSS. Let's install it, alongside `react-bootstrap` which provides the React components for it:
 
 ```sh
 npm install --save bootstrap react-bootstrap
@@ -305,7 +309,11 @@ Now, replace the App component's render function to use the bootstrap components
         </Nav>
       </Col>
       <Col md={8} sm={8}>
-        <WeatherDisplay key={activePlace} zip={PLACES[activePlace].zip} />
+        <WeatherDisplay
+          key={activePlace}
+          latitude={PLACES[activePlace].latitude}
+          longitude={PLACES[activePlace].longitude}
+        />
       </Col>
     </Row>
   </Grid>
@@ -320,7 +328,7 @@ Now our app is starting to look more polished, but it would be nice to have a cu
 npm install --save bootswatch
 ```
 
-[Browse the bootswatch website](http://bootswatch.com/) to find a theme, and install it by replacing the import of bootstrap css with the following. In this case we are using the 'journal' theme.
+[Browse the bootswatch website](https://bootswatch.com/) to find a theme, and install it by replacing the import of bootstrap css with the following. In this case we are using the 'journal' theme.
 
 ```js
 import "bootswatch/journal/bootstrap.css";
@@ -336,7 +344,7 @@ The final, working app should look like this:
 
 - [React](reactjs.org) - Official Documentation
 - [React Native](https://facebook.github.io/react-native/) - Use the same techniques to build mobile apps for iOS and Android
-- [Redux](http://redux.js.org/) - Manage data in large applications when props become tedious
+- [Redux](https://redux.js.org/) - Manage data in large applications when props become tedious
 - [Relay](https://facebook.github.io/relay/) - Easily connect React Components with GraphQL data
 - [Jest](https://facebook.github.io/jest/) - Test framework for JS
 - [Flow](https://flow.org/) - Static type checker for JS

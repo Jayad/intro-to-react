@@ -1,40 +1,46 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 // import "bootswatch/journal/bootstrap.css";
-import 'bootstrap/dist/css/bootstrap.css';
-import './App.css';
+import "bootstrap/dist/css/bootstrap.css";
+import "./App.css";
 
-import {Navbar, NavItem, Nav, Grid, Row, Col} from 'react-bootstrap';
+import fetch from "isomorphic-fetch";
+
+import { Navbar, NavItem, Nav, Grid, Row, Col } from "react-bootstrap";
 
 const PLACES = [
-  {name: 'Palo Alto', zip: '94303'},
-  {name: 'San Jose', zip: '94088'},
-  {name: 'Santa Cruz', zip: '95062'},
-  {name: 'Honolulu', zip: '96803'},
-  {name: 'Ewa Beach', zip: '96706'},
+  { name: "Singapore", latitude: 1.2948, longitude: 103.8565 },
+  { name: "San Francisco", latitude: 37.7749, longitude: -122.4194 },
+  { name: "Menlo Park", latitude: 37.453, longitude: -122.1817 },
+  { name: "Honolulu", latitude: 21.3069, longitude: -157.8583 }
 ];
 
 class WeatherDisplay extends Component {
   constructor() {
     super();
     this.state = {
-      weatherData: null,
+      weatherData: null
     };
   }
   componentDidMount() {
-    const zip = this.props.zip;
+    const latitude = this.props.latitude;
+    const longitude = this.props.longitude;
     const URL =
-      'http://api.openweathermap.org/data/2.5/weather?q=' +
-      zip +
-      '&appid=a50c863a9328b69267ad0fed0863cb93&units=imperial';
-    fetch(URL).then(res => res.json()).then(json => {
-      this.setState({weatherData: json});
-    });
+      "http://api.openweathermap.org/data/2.5/weather?lat=" +
+      latitude +
+      "&lon=" +
+      longitude +
+      "&appid=a50c863a9328b69267ad0fed0863cb93&units=imperial";
+    fetch(URL)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({ weatherData: json });
+      });
   }
   render() {
     const weatherData = this.state.weatherData;
     if (!weatherData) return <div>Loading</div>;
     const weather = weatherData.weather[0];
-    const iconUrl = 'http://openweathermap.org/img/w/' + weather.icon + '.png';
+    const iconUrl = "https://openweathermap.org/img/w/" + weather.icon + ".png";
     return (
       <div>
         <h1>
@@ -53,7 +59,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      activePlace: 0,
+      activePlace: 0
     };
   }
   render() {
@@ -63,7 +69,7 @@ class App extends Component {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>React Simple Weather App</Navbar.Brand>
-            <a href="https://github.com/ericvicenti/intro-to-react">
+            <a href="https://github.com/ericnakagawa/intro-to-react">
               Learn to build me
             </a>
           </Navbar.Header>
@@ -78,7 +84,7 @@ class App extends Component {
                 activeKey={activePlace}
                 onSelect={index => {
                   this.setState({
-                    activePlace: index,
+                    activePlace: index
                   });
                 }}>
                 {PLACES.map((place, index) => (
@@ -89,7 +95,11 @@ class App extends Component {
               </Nav>
             </Col>
             <Col md={8} sm={8}>
-              <WeatherDisplay key={activePlace} zip={PLACES[activePlace].zip} />
+              <WeatherDisplay
+                key={activePlace}
+                latitude={PLACES[activePlace].latitude}
+                longitude={PLACES[activePlace].longitude}
+              />
             </Col>
           </Row>
         </Grid>
